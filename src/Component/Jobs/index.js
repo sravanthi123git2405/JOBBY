@@ -59,7 +59,7 @@ class Jobs extends Component {
     this.setState({ apistatus: apistatusconstants.progress })
     const jwtToken = Cookies.get('token')
     const employequery = employementtype.join(',')
-    const apiUrl = `http://localhost:5000/jobs?employment_type=${employequery}&minimum_package=${salaryrange}&search=${searchinput}`
+    const apiUrl = `https://jobs-backend-xljm.onrender.com/jobs?employment_type=${employequery}&minimum_package=${salaryrange}&search=${searchinput}`
 
     const options = {
       method: 'GET',
@@ -210,12 +210,14 @@ class Jobs extends Component {
             </div>
             <div className="right-section">
               <form className="search-form" onSubmit={this.handlesearchsubmit}>
-                <input
-                  type="search"
-                  placeholder="Search"
-                  className="search-input"
-                  onChange={this.handlesearchinput}
-                />
+               <input
+  type="search"
+  placeholder="Search"
+  className="search-input"
+  value={this.state.searchinput}
+  onChange={this.handlesearchinput}
+/>
+
                 <button type="submit" className="search-btn">
                   <BsSearch className="search-icon" />
                 </button>
