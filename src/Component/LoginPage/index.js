@@ -1,63 +1,64 @@
-import { Component } from 'react'
-import { Navigate, Link } from 'react-router-dom'
-import Cookies from 'js-cookie'
-import './index.css'
+import { Component } from "react";
+import { Navigate, Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import "./index.css";
 
 class LoginPage extends Component {
   state = {
-    username: '',
-    password: '',
+    username: "",
+    password: "",
     loading: false,
     showError: false,
-    errorMsg: '',
+    errorMsg: "",
     redirectToHome: false,
-  }
+  };
 
-  handleSubmit = async event => {
-    event.preventDefault()
-    this.setState({ loading: true, showError: false })
-    const { username, password } = this.state
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    this.setState({ loading: true, showError: false });
+
+    const { username, password } = this.state;
 
     try {
       const response = await fetch(
-        'https://jobs-backend-xljm.onrender.com/users/login',
+        "https://jobs-backend-xljm.onrender.com/users/login",
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // ✅ important for cookies
           body: JSON.stringify({ username, password }),
         }
-      )
+      );
 
-      const data = await response.json()
+      console.log("Login response:", response);
+      const data = await response.json();
+      console.log("Parsed data:", data);
 
       if (response.ok && data.token) {
-        Cookies.set('token', data.token, { expires: 1 })
-        Cookies.set('username', username, { expires: 1 })
-        this.setState({ redirectToHome: true })
+        Cookies.set("token", data.token, { expires: 1 });
+        Cookies.set("username", username, { expires: 1 });
+        this.setState({ redirectToHome: true });
       } else {
         this.setState({
           showError: true,
-          errorMsg: data.error_msg || 'Login failed',
-        })
+          errorMsg: data.error_msg || "Login failed",
+        });
       }
     } catch (err) {
-      this.setState({ showError: true, errorMsg: 'Something went wrong' })
+      console.error("Login error:", err);
+      this.setState({
+        showError: true,
+        errorMsg: "Something went wrong. Please try again.",
+      });
     } finally {
-      this.setState({ loading: false })
+      this.setState({ loading: false });
     }
-  }
+  };
 
   render() {
-    const {
-      username,
-      password,
-      loading,
-      showError,
-      errorMsg,
-      redirectToHome,
-    } = this.state
+    const { username, password, loading, showError, errorMsg, redirectToHome } = this.state;
 
-    if (redirectToHome) return <Navigate to="/home" replace />
+    if (redirectToHome) return <Navigate to="/home" replace />;
 
     return (
       <div className="auth-container">
@@ -72,28 +73,32 @@ class LoginPage extends Component {
             <input
               type="text"
               value={username}
-              onChange={e => this.setState({ username: e.target.value })}
+              onChange={(e) => this.setState({ username: e.target.value })}
               required
             />
+
             <label>Password</label>
             <input
               type="password"
               value={password}
-              onChange={e => this.setState({ password: e.target.value })}
+              onChange={(e) => this.setState({ password: e.target.value })}
               required
             />
+
             <button type="submit" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? "Logging in..." : "Login"}
             </button>
+
             {showError && <p className="error-msg">{errorMsg}</p>}
           </form>
+
           <p>
-            You don't have an account ? <Link to="/signup">Signup</Link>
+            Don't have an account? <Link to="/signup">Signup</Link>
           </p>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default LoginPage
+export default LoginPage;

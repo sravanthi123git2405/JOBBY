@@ -1,45 +1,54 @@
-import { Component } from 'react'
-import { Navigate, Link } from 'react-router-dom'
-import './index.css'
+import { Component } from "react"
+import { Navigate, Link } from "react-router-dom"
+import "./index.css"
 
 class SignupPage extends Component {
   state = {
-    name: '',
-    username: '',
-    password: '',
+    name: "",
+    username: "",
+    password: "",
     loading: false,
     showError: false,
-    errorMsg: '',
+    errorMsg: "",
     redirectToLogin: false,
   }
 
   handleSubmit = async event => {
     event.preventDefault()
     this.setState({ loading: true, showError: false })
+
     const { name, username, password } = this.state
 
     try {
       const response = await fetch(
-        'https://jobs-backend-xljm.onrender.com/users/register',
+        "https://jobs-backend-xljm.onrender.com/users/register",
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, username, password }),
         }
       )
 
+      console.log("Signup response:", response)
+
       const data = await response.json()
+      console.log("Parsed data:", data)
 
       if (response.ok) {
+        // ✅ Successfully registered, redirect to login
         this.setState({ redirectToLogin: true })
       } else {
         this.setState({
           showError: true,
-          errorMsg: data.error_msg || 'Signup failed',
+          errorMsg: data.error_msg || "Signup failed. Try again.",
         })
       }
-    } catch {
-      this.setState({ showError: true, errorMsg: 'Something went wrong' })
+    } catch (err) {
+      console.error("Signup error:", err)
+      this.setState({
+        showError: true,
+        errorMsg: "Something went wrong. Please try again.",
+      })
     } finally {
       this.setState({ loading: false })
     }
@@ -56,7 +65,9 @@ class SignupPage extends Component {
       redirectToLogin,
     } = this.state
 
-    if (redirectToLogin) return <Navigate to="/login" replace />
+    if (redirectToLogin) {
+      return <Navigate to="/login" replace />
+    }
 
     return (
       <div className="auth-container">
@@ -66,6 +77,7 @@ class SignupPage extends Component {
             alt="website logo"
             className="website-logo"
           />
+
           <form className="form-control" onSubmit={this.handleSubmit}>
             <label>Name</label>
             <input
@@ -74,6 +86,7 @@ class SignupPage extends Component {
               onChange={e => this.setState({ name: e.target.value })}
               required
             />
+
             <label>Username</label>
             <input
               type="text"
@@ -81,6 +94,7 @@ class SignupPage extends Component {
               onChange={e => this.setState({ username: e.target.value })}
               required
             />
+
             <label>Password</label>
             <input
               type="password"
@@ -88,13 +102,19 @@ class SignupPage extends Component {
               onChange={e => this.setState({ password: e.target.value })}
               required
             />
+
             <button type="submit" disabled={loading}>
-              {loading ? 'Signing up...' : 'Signup'}
+              {loading ? "Signing up..." : "Signup"}
             </button>
+
             {showError && <p className="error-msg">{errorMsg}</p>}
           </form>
+
           <p>
-            Already have an account ? <Link to="/login">Login</Link>
+            Already have an account?{" "}
+            <Link to="/login" className="login-link">
+              Login
+            </Link>
           </p>
         </div>
       </div>
