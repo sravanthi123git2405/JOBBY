@@ -21,7 +21,7 @@ class SignupPage extends Component {
 
     try {
       const response = await fetch(
-        "https://jobs-backend-xljm.onrender.com/users/register",
+        "https://jobby-jgdo.onrender.com/users/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

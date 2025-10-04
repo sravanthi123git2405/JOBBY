@@ -27,7 +27,7 @@ class ProfileComponent extends Component {
         return
       }
 
-      const url = 'https://jobs-backend-xljm.onrender.com/users/profile'
+      const url = 'https://jobby-jgdo.onrender.com/users/profile'
       const options = {
         method: 'GET',
         headers: {

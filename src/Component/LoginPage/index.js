@@ -13,7 +13,7 @@ class LoginPage extends Component {
     redirectToHome: false,
   };
 
-  handleSubmit = async (event) => {
+  handleSubmit = async event => {
     event.preventDefault();
     this.setState({ loading: true, showError: false });
 
@@ -21,18 +21,16 @@ class LoginPage extends Component {
 
     try {
       const response = await fetch(
-        "https://jobs-backend-xljm.onrender.com/users/login",
+        "https://jobby-jgdo.onrender.com/users/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include", // ✅ important for cookies
+          credentials: "include", // ✅ send cookies
           body: JSON.stringify({ username, password }),
         }
       );
 
-      console.log("Login response:", response);
       const data = await response.json();
-      console.log("Parsed data:", data);
 
       if (response.ok && data.token) {
         Cookies.set("token", data.token, { expires: 1 });
@@ -73,7 +71,7 @@ class LoginPage extends Component {
             <input
               type="text"
               value={username}
-              onChange={(e) => this.setState({ username: e.target.value })}
+              onChange={e => this.setState({ username: e.target.value })}
               required
             />
 
@@ -81,7 +79,7 @@ class LoginPage extends Component {
             <input
               type="password"
               value={password}
-              onChange={(e) => this.setState({ password: e.target.value })}
+              onChange={e => this.setState({ password: e.target.value })}
               required
             />
 
@@ -102,3 +100,4 @@ class LoginPage extends Component {
 }
 
 export default LoginPage;
+
